@@ -5,14 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rút gọn liên kết</title>
   <style>
-    body { font-family: sans-serif; background: #f8f9fa; padding: 2rem; max-width: 600px; margin: auto; }
-    input, button { padding: 0.5rem; font-size: 1rem; margin-top: 0.5rem; width: 100%; }
-    .result { margin-top: 1.5rem; padding: 1rem; background: #fff; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
-    #qrcode { margin-top: 1rem; }
+    body {
+      font-family: sans-serif;
+      background: #f8f9fa;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    input, button {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      width: 100%;
+    }
+    .result {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    #qrcode {
+      margin-top: 1rem;
+    }
   </style>
 </head>
 <body>
-  <h2>Rút gọn liên kết (Không lưu máy chủ)</h2>
+  <h2>Rút gọn liên kết (Không cần lưu máy chủ)</h2>
   <form id="shortenerForm">
     <label>Link gốc:</label>
     <input type="url" id="url" placeholder="https://example.com" required><br>

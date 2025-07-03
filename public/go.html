@@ -12,15 +12,26 @@
       }
 
       try {
-        const res = await fetch("/api/redirect?code=" + encodeURIComponent(code));
-        if (res.redirected) {
-          window.location.href = res.url;
+        const res = await fetch("/api/redirect?code=" + encodeURIComponent(code), {
+          redirect: "manual"
+        });
+
+        // Nếu API trả về redirect 302 và Location header
+        const location = res.headers.get("Location");
+        if (res.status === 302 && location) {
+          window.location.href = location;
+        } else if (res.ok) {
+          const maybeURL = await res.text();
+          if (maybeURL.startsWith("http")) {
+            window.location.href = maybeURL;
+          } else {
+            document.body.innerText = "❌ Redirect failed: " + maybeURL;
+          }
         } else {
-          const msg = await res.text();
-          document.body.innerText = \"❌ Redirect failed: \" + msg;
+          document.body.innerText = "❌ Redirect failed with status " + res.status;
         }
       } catch (err) {
-        document.body.innerText = \"❌ Error: \" + err.message;
+        document.body.innerText = "❌ Error: " + err.message;
       }
     })();
   </script>

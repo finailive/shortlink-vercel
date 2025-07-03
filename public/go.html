@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Redirecting...</title>
+  <script>
+    const code = window.location.pathname.split("/go/")[1];
+    if (code) {
+      window.location.href = "https://script.google.com/macros/s/AKfycbxLWccLvVZCugQ1kgDQcos0A7jRVu8EhOv5rpCVWBsXzJJbtf6ukkXPdCu8hVQSy1bz/exec?code=" + encodeURIComponent(code);
+    } else {
+      document.body.innerText = "❌ Không tìm thấy mã.";
+    }
+  </script>
+</head>
+<body>
+  <p>Đang chuyển hướng...</p>
+</body>
+</html>

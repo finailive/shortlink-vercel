@@ -3,6 +3,10 @@
     {
       "source": "/go/:code",
       "destination": "/go.html"
+    },
+    {
+      "source": "/api/redirect",
+      "destination": "/api/redirect.js"
     }
   ]
 }

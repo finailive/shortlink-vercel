@@ -4,12 +4,29 @@
   <meta charset="UTF-8" />
   <title>Redirecting...</title>
   <script>
-    const code = window.location.pathname.split("/go/")[1];
-    if (code) {
-      window.location.href = "https://script.google.com/macros/s/AKfycbxLWccLvVZCugQ1kgDQcos0A7jRVu8EhOv5rpCVWBsXzJJbtf6ukkXPdCu8hVQSy1bz/exec?code=" + encodeURIComponent(code);
-    } else {
-      document.body.innerText = "❌ Không tìm thấy mã.";
-    }
+    (async () => {
+      const code = window.location.pathname.split("/go/")[1];
+      if (!code) {
+        document.body.innerText = "❌ Thiếu mã code.";
+        return;
+      }
+
+      try {
+        // Gửi yêu cầu đến Google Apps Script để lấy URL đích
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxLWccLvVZCugQ1kgDQcos0A7jRVu8EhOv5rpCVWBsXzJJbtf6ukkXPdCu8hVQSy1bz/exec?code=" + encodeURIComponent(code));
+        const html = await response.text();
+
+        // Dùng Regex để lấy URL đích từ mã HTML của Apps Script
+        const match = html.match(/window\\.location\\.replace\\(\"(.*?)\"\\)/);
+        if (match && match[1]) {
+          window.location.href = match[1]; // Redirect đến link gốc
+        } else {
+          document.body.innerText = \"❌ Không tìm thấy link đích\";
+        }
+      } catch (err) {
+        document.body.innerText = \"❌ Lỗi khi tải link: \" + err.message;
+      }
+    })();
   </script>
 </head>
 <body>

@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   try {
     const r = await fetch(`https://script.google.com/macros/s/AKfycbxLWccLvVZCugQ1kgDQcos0A7jRVu8EhOv5rpCVWBsXzJJbtf6ukkXPdCu8hVQSy1bz/exec?code=${encodeURIComponent(code)}`);
     const html = await r.text();
-    const match = html.match(/window\\.location\\.replace\\(\"(.*?)\"\\)/);
+    const match = html.match(/window\.location\.replace\("(.*?)"\)/);
     
     if (match && match[1]) {
       res.writeHead(302, { Location: match[1] });

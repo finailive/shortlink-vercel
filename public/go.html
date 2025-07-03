@@ -1,39 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Redirecting...</title>
   <script>
-    (async () => {
-      const code = window.location.pathname.split("/go/")[1];
-      if (!code) {
-        document.body.innerText = "❌ Missing code.";
-        return;
-      }
-
+    const hash = window.location.hash.slice(1);
+    if (!hash) {
+      document.body.innerText = "❌ No encoded URL found.";
+    } else {
       try {
-        const res = await fetch("/api/redirect?code=" + encodeURIComponent(code), {
-          redirect: "manual"
-        });
-
-        // Nếu API trả về redirect 302 và Location header
-        const location = res.headers.get("Location");
-        if (res.status === 302 && location) {
-          window.location.href = location;
-        } else if (res.ok) {
-          const maybeURL = await res.text();
-          if (maybeURL.startsWith("http")) {
-            window.location.href = maybeURL;
-          } else {
-            document.body.innerText = "❌ Redirect failed: " + maybeURL;
-          }
-        } else {
-          document.body.innerText = "❌ Redirect failed with status " + res.status;
-        }
-      } catch (err) {
-        document.body.innerText = "❌ Error: " + err.message;
+        const decoded = decodeURIComponent(atob(hash));
+        window.location.replace(decoded);
+      } catch (e) {
+        document.body.innerText = "❌ Invalid encoded URL.";
       }
-    })();
+    }
   </script>
 </head>
 <body>

@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Redirecting...</title>
   <script>
-    const hash = window.location.hash.slice(1);
-    if (!hash) {
-      document.body.innerText = "❌ No encoded URL found.";
-    } else {
+    (function() {
+      const hash = window.location.hash.slice(1);
+      if (!hash) {
+        document.body.innerText = "❌ No encoded URL found.";
+        return;
+      }
+
       try {
         const decoded = decodeURIComponent(atob(hash));
+        if (!decoded.startsWith('http://') && !decoded.startsWith('https://')) {
+          document.body.innerText = "❌ Invalid URL: " + decoded;
+          return;
+        }
         window.location.replace(decoded);
       } catch (e) {
-        document.body.innerText = "❌ Invalid encoded URL.";
+        document.body.innerText = "❌ Decode error: " + e.message;
       }
-    }
+    })();
   </script>
 </head>
 <body>

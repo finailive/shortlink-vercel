@@ -4,13 +4,10 @@ export default async function handler(req, res) {
 
   try {
     const r = await fetch(`https://script.google.com/macros/s/AKfycbxLWccLvVZCugQ1kgDQcos0A7jRVu8EhOv5rpCVWBsXzJJbtf6ukkXPdCu8hVQSy1bz/exec?code=${encodeURIComponent(code)}`);
-    const html = await r.text();
+    const data = await r.json();
 
-    // ✅ Cập nhật regex để linh hoạt hơn: cho phép ' hoặc " và có thể có khoảng trắng
-    const match = html.match(/window\.location\.replace\((["'])(.*?)\1\)/);
-
-    if (match && match[2]) {
-      res.writeHead(302, { Location: match[2] });
+    if (data.url) {
+      res.writeHead(302, { Location: data.url });
       res.end();
     } else {
       res.status(500).send('❌ Target URL not found');

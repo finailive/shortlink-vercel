@@ -1,12 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/go/:code",
+      "source": "/go/:hash*",
       "destination": "/go.html"
-    },
-    {
-      "source": "/api/redirect",
-      "destination": "/api/redirect.js"
     }
   ]
 }

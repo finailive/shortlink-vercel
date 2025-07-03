@@ -6,19 +6,13 @@
   <script>
     (function() {
       const hash = window.location.hash.slice(1);
-      if (!hash) {
-        document.body.innerText = "❌ No encoded URL found.";
-        return;
-      }
+      if (!hash) return document.body.innerText = "❌ No encoded URL.";
 
       try {
         const decoded = decodeURIComponent(atob(hash));
-        if (!decoded.startsWith('http://') && !decoded.startsWith('https://')) {
-          document.body.innerText = "❌ Invalid URL: " + decoded;
-          return;
-        }
-        window.location.replace(decoded);
-      } catch (e) {
+        if (/^https?:\/\//.test(decoded)) window.location.replace(decoded);
+        else document.body.innerText = "❌ Invalid URL: " + decoded;
+      } catch(e) {
         document.body.innerText = "❌ Decode error: " + e.message;
       }
     })();

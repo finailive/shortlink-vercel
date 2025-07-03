@@ -1,40 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8" />
   <title>Redirecting...</title>
   <script>
     (async () => {
-      const path = window.location.pathname;
-      const code = path.split("/go/")[1];
-
+      const code = window.location.pathname.split("/go/")[1];
       if (!code) {
-        document.body.innerText = "❌ Missing short code.";
+        document.body.innerText = "❌ Missing code.";
         return;
       }
 
       try {
-        // Call Apps Script to get the real destination URL
-        const res = await fetch("https://script.google.com/macros/s/AKfycbxLWccLvVZCugQ1kgDQcos0A7jRVu8EhOv5rpCVWBsXzJJbtf6ukkXPdCu8hVQSy1bz/exec?code=" + encodeURIComponent(code));
-        const text = await res.text();
-
-        // Extract redirect URL from HTML returned by Apps Script
-        const match = text.match(/window\\.location\\.replace\\("(.+?)"\\)/);
-
-        if (match && match[1]) {
-          const originalUrl = match[1];
-          window.location.href = originalUrl; // Redirect directly
+        const res = await fetch("/api/redirect?code=" + encodeURIComponent(code));
+        if (res.redirected) {
+          window.location.href = res.url;
         } else {
-          document.body.innerText = "❌ Redirect URL not found.";
+          const msg = await res.text();
+          document.body.innerText = \"❌ Redirect failed: \" + msg;
         }
-
-      } catch (error) {
-        document.body.innerText = "❌ Error fetching redirect: " + error.message;
+      } catch (err) {
+        document.body.innerText = \"❌ Error: \" + err.message;
       }
     })();
   </script>
 </head>
 <body>
-  <p>Redirecting to destination...</p>
+  <p>Redirecting...</p>
 </body>
 </html>

@@ -1,8 +1,5 @@
 {
   "rewrites": [
-    {
-      "source": "/go/:hash*",
-      "destination": "/go.html"
-    }
+    { "source": "/go/:hash*", "destination": "/go.html" }
   ]
 }

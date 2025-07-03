@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Link Shortener</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f8f9fa;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    input, button {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+    .result {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    #qrcode {
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h2>Link Shortener</h2>
+  <form id="shortenerForm">
+    <label>Link gốc:</label><br>
+    <input type="url" id="url" placeholder="https://example.com" required style="width:100%"><br>
+    <label>Mã rút gọn (tuỳ chọn):</label><br>
+    <input type="text" id="code" placeholder="vd: abc123" style="width:100%"><br>
+    <button type="submit">Tạo link</button>
+  </form>
+
+  <div class="result" id="result" style="display:none">
+    <p><strong>Link rút gọn:</strong> <a href="#" target="_blank" id="shortlink"></a></p>
+    <div id="qrcode"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script>
+    const form = document.getElementById('shortenerForm');
+    const resultDiv = document.getElementById('result');
+    const shortlinkA = document.getElementById('shortlink');
+    const qrcodeDiv = document.getElementById('qrcode');
+
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxLWccLvVZCugQ1kgDQcos0A7jRVu8EhOv5rpCVWBsXzJJbtf6ukkXPdCu8hVQSy1bz/exec';
+    const baseShortURL = 'https://links.smarttravelly.com/go/';
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const url = document.getElementById('url').value.trim();
+      let code = document.getElementById('code').value.trim();
+      if (!code) code = Math.random().toString(36).substring(2, 8); // auto generate if empty
+
+      const formData = new URLSearchParams();
+      formData.append('code', code);
+      formData.append('url', url);
+
+      try {
+        const res = await fetch(scriptURL, {
+          method: 'POST',
+          body: formData
+        });
+        const text = await res.text();
+        if (text.includes('✅')) {
+          const shortURL = baseShortURL + code;
+          shortlinkA.href = shortURL;
+          shortlinkA.textContent = shortURL;
+          resultDiv.style.display = 'block';
+          qrcodeDiv.innerHTML = '';
+          QRCode.toCanvas(shortURL, { width: 160 }, function (err, canvas) {
+            if (!err) qrcodeDiv.appendChild(canvas);
+          });
+        } else {
+          alert(text);
+        }
+      } catch (err) {
+        alert('Lỗi khi gửi: ' + err.message);
+      }
+    });
+  </script>
+</body>
+</html>
